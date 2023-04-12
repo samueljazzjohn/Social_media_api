@@ -13,6 +13,14 @@ or
 ```sh
 yarn install
 ```
+## Running Application locally
+```sh
+npm start
+```
+or 
+```sh
+yarn start
+```
 
 ## Testing
 ```sh
