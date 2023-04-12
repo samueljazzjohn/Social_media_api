@@ -1,19 +1,41 @@
-const chai = require('chai')
-const chaiHttp = require('chai-http')
-const { describe } = require('mocha')
-const server = require('../router/index')
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+const server = require('../server/index');
 
+chai.use(chaiHttp);
+const expect = chai.expect;
 
-chai.should()
+describe('POST /api/authenticate', function() {
+  it('should return a JWT token for valid credentials', function(done) {
+    chai.request(server)
+      .post('/api/authenticate')
+      .send({ email: 'samuel@gmail.com', password: 'jazz2@1999' })
+      .end(function(err, res) {
+        expect(res).to.have.status(200);
+        expect(res.body.token).to.exist;
+        done();
+      });
+  });
 
-chai.use(chaiHttp)
+  it('should return an error for invalid credentials', function(done) {
+    chai.request(server)
+      .post('/api/authenticate')
+      .send({ email: 'samuel@gmail.com', password: 'invalidpassword' })
+      .end(function(err, res) {
+        expect(res).to.have.status(401);
+        expect(res.body.message).to.equal('Invalid credentials');
+        done();
+      });
+  });
 
-
-// describe('Authenticate Api',()=>{
-
-//     describe("POST /api/authenticate",()=>{
-//         it("")
-//     })
-
-
-// })
+  it('should return an error for a nonexistent user', function(done) {
+    chai.request(server)
+      .post('/api/authenticate')
+      .send({ email: 'nonexistent@gamil.com', password: 'password123' })
+      .end(function(err, res) {
+        expect(res).to.have.status(404);
+        expect(res.body.message).to.equal('User not found');
+        done();
+      });
+  });
+});
