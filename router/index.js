@@ -61,7 +61,7 @@ router.post('/api/follow/:id', authenticateToken, (req, res, next) => {
                     if (!updatedUser) {
                         return res.status(404).json({ message: 'User not found' });
                     }
-                    return res.json({ message: `You are now following ${user.name}` });
+                    return res.status(200).json({ message: `You are now following ${user.name}` });
                 }).catch((err) => {
                     return res.status(500).json({ message: err.message });
                 })
@@ -95,7 +95,7 @@ router.post('/api/unfollow/:id', authenticateToken, (req, res, next) => {
                 }
                 return res.json({ message: `You are unfollowing ${user.name}` });
             }).catch((err) => {
-                return res.status(500).json({ message: err.message });
+                return res.status(404).json({ message: 'User not found' });
             })
     }).catch((err) => {
         return res.status(500).json({ message: err.message });
@@ -113,7 +113,7 @@ router.get('/api/user', authenticateToken, (req, res, next) => {
             if (!user) {
                 return res.status(404).json({ message: 'User not found' });
             }
-            return res.json({
+            return res.status(200).json({
                 username: user.name,
                 followers: user.followers.length,
                 following: user.following.length,
@@ -231,6 +231,10 @@ router.post('/api/comment/:id', authenticateToken, async (req, res) => {
     const { id } = req.params;
     const { comment } = req.body;
     const userId = req.user.userId
+
+    if(comment.trim()===''){
+        return res.status(403).json({message:"Please give proper comment"})
+    }
 
     // Check if the specified post ID exists in the database
     try {
