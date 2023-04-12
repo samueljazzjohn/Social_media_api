@@ -15,11 +15,8 @@ COPY . .
 
 # set the environment variables
 ENV PORT=3000
-ENV MONGODB_URI=<your_mongodb_uri_here>
-ENV JWT_SECRET=<your_jwt_secret_here>
-
-# run the tests
-RUN npm test
+ENV MONGODB_URI="mongodb+srv://jazzjohn:jazz1999@cluster0.5vxhxzv.mongodb.net/social-media-app"
+ENV JWT_SECRET_KEY="jazzjohn@123"
 
 # expose the port
 EXPOSE 3000
